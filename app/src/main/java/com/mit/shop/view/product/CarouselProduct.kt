@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 
 
 @Composable
@@ -98,7 +99,9 @@ fun ProductCard(product: Product,navController: NavController) {
                     text = "$${product.price}",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 1, // Ensures the text is constrained to one line
+                    overflow = TextOverflow.Ellipsis // Adds ellipsis (...) if the text is too long
                 )
 
                 Spacer(modifier = Modifier.width(50.dp))

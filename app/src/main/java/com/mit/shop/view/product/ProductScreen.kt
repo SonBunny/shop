@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,10 +73,12 @@ fun ProductCard(
                         modifier = Modifier
                     )
                     Text(
-                        product.name,
+                        text = product.name,
                         style = MaterialTheme.typography.h6,
                         fontSize = 15.sp,
-                        modifier = Modifier
+                        modifier = Modifier,
+                        maxLines = 1, // Ensures the text is constrained to one line
+                        overflow = TextOverflow.Ellipsis // Adds ellipsis (...) if the text is too long
                     )
                     Spacer(modifier = Modifier.height(15.dp))
 

@@ -35,12 +35,7 @@ import com.mit.shop.ui.theme.*
 import com.mit.shop.view.product.*
 @Composable
 fun HomeScreen(navController: NavController) {
-    val products = listOf(
-        Product(1, "Nike React Miler", "Description 1", R.drawable.product1,true, listOf("Red", "Blue", "Green"),120.99),
-        Product(2, "Nike Air Max 270", "Description 2", R.drawable.product2,false, listOf("Yellow", "Black"),119.99),
-        Product(3, "Nike Air Max 2090", "Description 3", R.drawable.product3,true, listOf("Purple", "Orange"),99.99),
-        // Add more products as needed
-    )
+    val products = Product.products
     Scaffold(
         bottomBar = {
 
