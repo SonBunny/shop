@@ -1,13 +1,19 @@
 package com.mit.shop.view.product
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.*
@@ -16,74 +22,106 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.material.Card
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.CardDefaults
+
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 
 
 @Composable
 fun CarouselProduct(navController: NavController, products: List<Product>) {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
-    // This launches a coroutine that runs indefinitely to auto-scroll
-    LaunchedEffect(key1 = listState) {
-        while (true) {
-            // Auto-scroll to the next item every 5 seconds
-            coroutineScope.launch {
-                val nextIndex = (listState.firstVisibleItemIndex + 1) % products.size
-                listState.animateScrollToItem(nextIndex)
-            }
-            delay(5000) // Delay for 5 seconds
-        }
-    }
-
-    // Add the same products to the list to create an infinite loop effect
-    val extendedProductList = products + products
-
     LazyRow(
-        state = listState,
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = PaddingValues(horizontal = 1.dp),
+        horizontalArrangement = Arrangement.spacedBy(1.dp)
     ) {
-        items(extendedProductList) { product ->
-            ProductCard(product = product, navController)
+        items(products) { product ->
+            ProductCard(product = product,navController)
         }
     }
 }
 
+
+
 @Composable
 fun ProductCard(product: Product,navController: NavController) {
-    Box(
+    Card(
         modifier = Modifier
-            .padding(8.dp)
-            .size(200.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(2.dp, if (product.isNew) Color.Red else Color.Transparent, RoundedCornerShape(16.dp)) // Highlight if new
-            .clickable { /* Handle click */ }
+            .padding(start = 16.dp, top = 16.dp)
+            .size(height = 270.dp, width = 180.dp), // Adjust card size
+        elevation = 8.dp,
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
         ) {
             Image(
                 painter = painterResource(id = product.image),
                 contentDescription = product.name,
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.Gray),
+                contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = product.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(text = product.name, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "${product.description.take(30)}...", fontSize = 14.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            if (product.isNew) {
+            Box(modifier = Modifier
+                .clip(RoundedCornerShape(6.dp))
+                .background(Color(0xFFD5DDE0))
+
+                .size(height = 25.dp, width = 80.dp),
+                contentAlignment = Alignment.Center
+            ){
                 Text(
-                    text = "New!",
-                    color = Color.Red,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.End)
+                    text = "${product.colors.size} colors",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+
+            ) {
+                Text(
+                    text = "$${product.price}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.width(50.dp))
+
+                IconButton(
+                    onClick = {
+                        // Handle add to cart action
+                    },
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+
+                    content = {
+                        Icon(
+                            imageVector = Icons.Filled.ShoppingCart,
+                            contentDescription = "Add to Cart",
+                            tint = Color.Gray
+                        )
+                    }
+                )
+            }
+
         }
     }
 }
+

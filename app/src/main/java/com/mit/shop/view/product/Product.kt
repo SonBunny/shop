@@ -6,6 +6,8 @@ data class Product(
     val name: String,
     val description: String,
     val image: Int,
-    val isNew: Boolean
+    val isNew: Boolean,
+    val colors: List<String>, // Array of colors as a list of strings
+    val price: Double
 )
 

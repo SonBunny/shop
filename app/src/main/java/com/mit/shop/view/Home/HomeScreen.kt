@@ -36,11 +36,11 @@ import com.mit.shop.view.product.*
 @Composable
 fun HomeScreen(navController: NavController) {
     val products = listOf(
-        Product(1, "Air Max 2090", "Description of Product 1", R.drawable.product1,false),
-        Product(2, "Nike React Miler", "Description of Product 2", R.drawable.product2,true),
-        Product(3, "Air Max 270", "Description of Product 3", R.drawable.product3,true)
+        Product(1, "Nike React Miler", "Description 1", R.drawable.product1,true, listOf("Red", "Blue", "Green"),120.99),
+        Product(2, "Nike Air Max 270", "Description 2", R.drawable.product2,false, listOf("Yellow", "Black"),119.99),
+        Product(3, "Nike Air Max 2090", "Description 3", R.drawable.product3,true, listOf("Purple", "Orange"),99.99),
+        // Add more products as needed
     )
-
     Scaffold(
         bottomBar = {
 
@@ -69,61 +69,66 @@ fun HomeScreen(navController: NavController) {
 
 @Composable
 fun NewProducts(navController: NavController, products: List<Product>){
+    // Filter the products to only include the ones with isNew = true
+    val newProducts = products.filter { it.isNew }
+
     Box(
         modifier = Modifier
             .height(370.dp)
             .clip(
                 RoundedCornerShape(
-                    topStart = 50.dp, // Round the top-left corner
-                    topEnd = 50.dp,    // Keep the top-right corner square
-                    bottomEnd = 0.dp, // Round the bottom-right corner
-                    bottomStart = 0.dp // Keep the bottom-left corner square
+                    topStart = 50.dp,
+                    topEnd = 50.dp,
+                    bottomEnd = 0.dp,
+                    bottomStart = 0.dp
                 )
             )
             .fillMaxWidth()
-            .background(Color(0xFFF7F8F9)) // Set background color or image here
-
+            .background(Color(0xFFF7F8F9))
             .zIndex(0f)
-
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(40.dp)
+                    .padding(start=30.dp,top=20.dp,end=30.dp)
             ) {
                 Text(
                     text = "New Products",
                     fontSize = 20.sp,
-                    modifier = Modifier
-                     .padding(top = 10.dp)
+                    modifier = Modifier.padding(top = 10.dp)
                 )
 
-                Spacer(modifier = Modifier.weight(1f)) // This will push the button to the end of the row
+                Spacer(modifier = Modifier.weight(1f))
 
                 Button(
                     onClick = { navController.navigate("all_product") },
                     modifier = Modifier
                         .size(height = 50.dp, width = 100.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0xFF1152FD), // Background color
-                        contentColor = Color.White // Text color
+                        backgroundColor = Color(0xFF1152FD),
+                        contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(14.dp)
                 ) {
                     Text("View all")
                 }
             }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start=10.dp,end=10.dp)
+            ){
 
-            CarouselProduct(navController, products)
+                CarouselProduct(products = newProducts, navController = navController)
+            }
+
+
+            // Pass only the filtered new products to the ProductCarousel
+
         }
-
-
-
-
     }
 
 }
