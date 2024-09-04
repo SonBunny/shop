@@ -32,16 +32,16 @@ fun SignUpVerify(navController: NavController){
 
     val focusRequesters = remember { List(4) { FocusRequester() } }
 
-    // State to hold the values of each TextField
+
     var codeState by remember { mutableStateOf(List(4) { "" }) }
 
-    // Function to handle text input and update the state
+
     fun onValueChange(newValue: String, index: Int) {
         if (newValue.length <= 1) {
             codeState = codeState.toMutableList().apply {
                 this[index] = newValue
             }
-            // Move focus to the next TextField
+
             if (newValue.isNotEmpty() && index < codeState.size - 1) {
                 focusRequesters[index + 1].requestFocus()
             }
@@ -103,7 +103,7 @@ fun SignUpVerify(navController: NavController){
             repeat(4) { index ->
 
 
-                // Create a TextField for each digit
+
                 TextField(
                     value = codeState[index],
                     onValueChange = { newValue ->
@@ -112,30 +112,30 @@ fun SignUpVerify(navController: NavController){
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
                         .focusRequester(focusRequesters[index])
-                        .size(80.dp) // Size of each TextField
+                        .size(80.dp)
                         .border(1.dp, Color(0xFF000000), shape = RoundedCornerShape(13.dp))
                         .padding(end = if (index < 5) 16.dp else 0.dp),
                     textStyle = LocalTextStyle.current.copy(fontSize = 30.sp, color = Color.Black, fontWeight = FontWeight.Bold),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color(0xFFF7F8F9), // Background color of the text field
-                        focusedIndicatorColor = Color.Transparent, // Hide the focused indicator
-                        unfocusedIndicatorColor = Color.Transparent // Hide the unfocused indicator
+                        backgroundColor = Color(0xFFF7F8F9),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     singleLine = true,
                     maxLines = 1
 
                 )
                 if (index < 5) {
-                    // Add space between TextFields
+
                     Spacer(modifier = Modifier.width(20.dp))
                 }
             }
         }
 
         Button(
-            onClick = { navController.navigate("sign_up_pass") },
+            onClick = { navController.navigate("sign_up_screen") },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally) // Center button horizontally
+                .align(Alignment.CenterHorizontally)
                 .padding(vertical = 120.dp)
                 .size(height = 50.dp, width = 300.dp),
             shape = RoundedCornerShape(14.dp)

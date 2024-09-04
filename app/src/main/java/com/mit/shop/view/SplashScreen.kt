@@ -31,7 +31,7 @@ fun SplashScreen(navController: NavController){
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = BackgroundColor // Set the background color here
+        color = BackgroundColor
     ) {
         Column(
             modifier = Modifier
@@ -41,17 +41,17 @@ fun SplashScreen(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.sneakit), // Replace 'logo' with your image resource name
+                painter = painterResource(id = R.drawable.sneakit),
                 contentDescription = "App Logo",
-                contentScale = ContentScale.Fit, // Adjust as needed
-                modifier = Modifier.size(128.dp) // Adjust size as needed
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(128.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { navController.navigate("sign_up_name") },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White, // Background color
-                    contentColor = Color(0xFF1152FD) // Text color
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF1152FD)
                 ),
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
@@ -62,10 +62,10 @@ fun SplashScreen(navController: NavController){
                 Text(text = "Sign Up", color = Color(0xFF1152FD))
             }
             Button(
-                onClick = { navController.navigate("sign_in_view") },
+                onClick = { navController.navigate("sign_in") },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1152FD), // Background color
-                    contentColor = Color(0xFF1152FD) // Text color
+                    containerColor = Color(0xFF1152FD),
+                    contentColor = Color(0xFF1152FD)
                 ),
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier

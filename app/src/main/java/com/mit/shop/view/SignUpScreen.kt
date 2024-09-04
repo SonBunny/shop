@@ -1,13 +1,11 @@
 package com.mit.shop.view
 
-
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,16 +13,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.mit.shop.R
-
+import com.mit.shop.network.account.AccountRepository
+import com.mit.shop.model.SignUpStatusResponse
+import kotlinx.coroutines.launch
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, backStackEntry: NavBackStackEntry) {
 
-
+    val firstName by remember { mutableStateOf(backStackEntry.arguments?.getString("firstName") ?: "") }
+    val lastName by remember { mutableStateOf(backStackEntry.arguments?.getString("lastName") ?: "") }
+    val phoneNumber by remember { mutableStateOf(backStackEntry.arguments?.getString("phoneNumber") ?: "") }
+    val email by remember { mutableStateOf(backStackEntry.arguments?.getString("email") ?: "") }
+    val gender by remember { mutableStateOf(backStackEntry.arguments?.getString("gender") ?: "") }
+    val birthDate by remember { mutableStateOf(backStackEntry.arguments?.getString("birthDate") ?: "") }
     var password by remember { mutableStateOf("") }
-    var confirmpassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var signUpStatus by remember { mutableStateOf<SignUpStatusResponse?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
+
+    val accountRepository = remember { AccountRepository() }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -52,8 +63,6 @@ fun SignUpScreen(navController: NavController) {
             )
         }
 
-
-
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
@@ -65,19 +74,19 @@ fun SignUpScreen(navController: NavController) {
         )
 
         TextField(
-            value = password, // State variable to hold the text field value
+            value = password,
             onValueChange = { password = it },
-            placeholder = { Text("Password1!") }, // Optional label
-            visualTransformation = PasswordVisualTransformation(), // Mask password input
+            placeholder = { Text("Password1!") },
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
-                .padding(start= 30.dp,top = 10.dp, end = 35.dp)
+                .padding(start = 30.dp, top = 10.dp, end = 35.dp)
                 .border(1.dp, Color(0xFFD5DDE0), shape = RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp), // Custom shape
+            shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color(0xFFF7F8F9), // Background color of the text field
-                focusedIndicatorColor = Color.Transparent, // Hide the focused indicator
-                unfocusedIndicatorColor = Color.Transparent // Hide the unfocused indicator
+                backgroundColor = Color(0xFFF7F8F9),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             ),
         )
 
@@ -92,34 +101,73 @@ fun SignUpScreen(navController: NavController) {
         )
 
         TextField(
-            value = confirmpassword, // State variable to hold the text field value
-            onValueChange = { confirmpassword = it },
-            placeholder = { Text("confirm your password") }, // Optional label
-            visualTransformation = PasswordVisualTransformation(), // Mask password input
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            placeholder = { Text("Confirm your password") },
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
-                .padding(start= 30.dp,top = 10.dp, end = 35.dp)
+                .padding(start = 30.dp, top = 10.dp, end = 35.dp)
                 .border(1.dp, Color(0xFFD5DDE0), shape = RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp), // Custom shape
+            shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color(0xFFF7F8F9), // Background color of the text field
-                focusedIndicatorColor = Color.Transparent, // Hide the focused indicator
-                unfocusedIndicatorColor = Color.Transparent // Hide the unfocused indicator
+                backgroundColor = Color(0xFFF7F8F9),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             ),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button
+
         Button(
-            onClick = { navController.navigate("sign_up_success") },
+            onClick = {
+                if (password == confirmPassword) {
+                    coroutineScope.launch {
+                        isLoading = true
+                        val response = accountRepository.signUp(
+                            email,
+                            password,
+                            firstName,
+                            lastName,
+                            phoneNumber,
+                            gender,
+                            birthDate
+                        )
+                        isLoading = false
+                        if (response?.status == "success") {
+                            navController.navigate("sign_up_success")
+                        } else {
+
+                            signUpStatus = response
+                        }
+                    }
+                } else {
+
+                }
+            },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally) // Center button horizontally
+                .align(Alignment.CenterHorizontally)
                 .padding(vertical = 120.dp)
                 .size(height = 50.dp, width = 300.dp),
             shape = RoundedCornerShape(14.dp)
         ) {
-            Text("Sign Up")
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            } else {
+                Text("Sign Up")
+            }
+        }
+
+        signUpStatus?.let { status ->
+            Text(
+                text = "Sign Up Status: ${status.message}",
+                color = if (status.status == "success") Color.Green else Color.Red,
+                modifier = Modifier.padding(top = 16.dp)
+            )
         }
     }
 }

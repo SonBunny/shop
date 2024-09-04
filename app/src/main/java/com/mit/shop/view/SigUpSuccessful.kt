@@ -36,9 +36,9 @@ fun SignUpSuccessful(navController: NavController){
         ){
 
             Image(
-                painter = painterResource(id = R.drawable.staricon), // Replace 'logo' with your image resource name
+                painter = painterResource(id = R.drawable.staricon),
                 contentDescription = "App Logo",
-                contentScale = ContentScale.Fit, // Adjust as needed
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(80.dp)
 
@@ -55,7 +55,7 @@ fun SignUpSuccessful(navController: NavController){
                 Image(
                     painter = painterResource(id = R.drawable.baseline_check_circle_24), // Replace 'logo' with your image resource name
                     contentDescription = "App Logo",
-                    contentScale = ContentScale.Fit, // Adjust as needed
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(250.dp)
 
@@ -85,7 +85,7 @@ fun SignUpSuccessful(navController: NavController){
 
         )
         Text(
-            text = "        You have successfully reset your\npassword. Please use your new password\nwhen logging in",
+            text = "        You have successfully created your\naccount. Please use your email and password\nwhen logging in",
             style = TextStyle(
                 fontSize = 15.sp,
 
@@ -100,15 +100,12 @@ fun SignUpSuccessful(navController: NavController){
         Button(
             onClick = { navController.navigate("sign_in_view") },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally) // Center button horizontally
+                .align(Alignment.CenterHorizontally)
                 .padding(vertical = 65.dp)
                 .size(height = 50.dp, width = 300.dp),
             shape = RoundedCornerShape(14.dp)
         ) {
             Text("Back to Login")
         }
-
-
-
     }
 }

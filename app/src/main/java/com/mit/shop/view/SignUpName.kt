@@ -33,14 +33,12 @@ fun SignUpName(navController: NavController) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
 
-
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxSize() // Ensures the Column takes up the available space
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // Row with Back Button and Title
         Row(
             modifier = Modifier
                 .padding(top = 60.dp, start = 20.dp)
@@ -60,10 +58,8 @@ fun SignUpName(navController: NavController) {
             )
         }
 
-        // Add padding or spacing between the title and the text fields
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TextField for User Input
         Text(
             text = "First Name",
             fontSize = 15.sp,
@@ -79,11 +75,11 @@ fun SignUpName(navController: NavController) {
                 .padding(start = 30.dp, top = 10.dp, end = 35.dp)
                 .border(1.dp, Color(0xFFD5DDE0), shape = RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp), // Custom shape
+            shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color(0xFFF7F8F9), // Background color of the text field
-                focusedIndicatorColor = Color.Transparent, // Hide the focused indicator
-                unfocusedIndicatorColor = Color.Transparent // Hide the unfocused indicator
+                backgroundColor = Color(0xFFF7F8F9),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             ),
         )
 
@@ -104,28 +100,29 @@ fun SignUpName(navController: NavController) {
                 .padding(start = 30.dp, top = 10.dp, end = 35.dp)
                 .border(1.dp, Color(0xFFD5DDE0), shape = RoundedCornerShape(8.dp))
                 .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp), // Custom shape
+            shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color(0xFFF7F8F9), // Background color of the text field
-                focusedIndicatorColor = Color.Transparent, // Hide the focused indicator
-                unfocusedIndicatorColor = Color.Transparent // Hide the unfocused indicator
+                backgroundColor = Color(0xFFF7F8F9),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             ),
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        Button(
+            onClick = {
 
-            // Button
-            Button(
-                onClick = { navController.navigate("sign_up_info") },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally) // Center button horizontally
-                    .padding(vertical = 320.dp)
-                    .size(height = 50.dp, width = 300.dp),
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                Text("Next")
-            }
+                navController.navigate("sign_up_info?firstName=$firstName&lastName=$lastName")
+            },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 320.dp)
+                .size(height = 50.dp, width = 300.dp),
+            shape = RoundedCornerShape(14.dp)
+        ) {
+            Text("Next")
+        }
 
         Text(
             text = "Already have an account? Sign In",
@@ -134,8 +131,7 @@ fun SignUpName(navController: NavController) {
             modifier = Modifier
                 .offset(y = (-235).dp)
                 .padding(start = 100.dp)
-                .clickable{navController.navigate("sign_up_name")},
+                .clickable { navController.navigate("sign_in") },
         )
-
     }
 }

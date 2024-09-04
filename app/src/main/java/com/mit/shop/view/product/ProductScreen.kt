@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,14 +27,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mit.shop.R
+import com.mit.shop.decodeBase64ToImageBitmap
+import com.mit.shop.model.ProductModel
+
 import kotlinx.coroutines.delay
 
 
-// Composable function to display the product card
+
 @Composable
 fun ProductCard(
     navController: NavController,
-    product: Product,
+    product: ProductModel,
     totalProducts: Int,
     currentIndex: Int,
     onDotClicked: (Int) -> Unit,
@@ -44,7 +49,7 @@ fun ProductCard(
         modifier = modifier
             .padding(25.dp)
             .fillMaxWidth()
-            .height(180.dp) // Increased height to accommodate dots
+            .height(180.dp)
     ) {
         Column(
             modifier = Modifier
@@ -54,8 +59,9 @@ fun ProductCard(
             Row(
                 modifier = Modifier.weight(1f)
             ) {
+                val imageBitmap = product.image?.let { decodeBase64ToImageBitmap(it) }
                 Image(
-                    painter = painterResource(id = product.image),
+                    bitmap = imageBitmap ?: ImageBitmap.imageResource(id = R.drawable.product1),
                     contentDescription = product.name,
                     modifier = Modifier
                         .height(120.dp)
@@ -77,30 +83,36 @@ fun ProductCard(
                         style = MaterialTheme.typography.h6,
                         fontSize = 15.sp,
                         modifier = Modifier,
-                        maxLines = 1, // Ensures the text is constrained to one line
-                        overflow = TextOverflow.Ellipsis // Adds ellipsis (...) if the text is too long
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(15.dp))
 
                     Button(
-                        onClick = { navController.navigate("home_screen") },
+                        onClick = { navController.navigate("product_detail_screen/${product.id}") },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF3E4958), // Background color
-                            contentColor = Color.White // Text color
+                            containerColor = Color(0xFF3E4958),
+                            contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier
                             .size(width = 80.dp, height = 40.dp)
+
                     ) {
 
                     }
-                    Text(text = "Buy now", color = Color.White, fontSize = 14.sp, modifier = Modifier
-                        .offset(x = (14).dp,y = (-28).dp))
+                    Text(
+                        text = "Buy now",
+                        modifier = Modifier
+                            .padding(start=15.dp)
+                            .offset(y = (-29).dp),
+                        color = Color.White
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Dots Indicator with click support
+
             DotsIndicator(
                 totalDots = totalProducts,
                 selectedIndex = currentIndex,
@@ -110,7 +122,11 @@ fun ProductCard(
     }
 }
 
-// Composable function for the dots indicator with click support
+
+
+
+
+
 @Composable
 fun DotsIndicator(totalDots: Int, selectedIndex: Int, onDotClicked: (Int) -> Unit) {
     Row(
@@ -125,21 +141,21 @@ fun DotsIndicator(totalDots: Int, selectedIndex: Int, onDotClicked: (Int) -> Uni
                     .size(8.dp)
                     .clip(CircleShape)
                     .background(color)
-                    .clickable { onDotClicked(i) } // Make the dot clickable
+                    .clickable { onDotClicked(i) }
             )
         }
     }
 }
 
-// Composable function to display the product showcase
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun ProductShowcase(navController: NavController, products: List<Product>) {
+fun ProductShowcase(navController: NavController, products: List<ProductModel>) {
     var currentProductIndex by remember { mutableStateOf(0) }
 
-    // Trigger the next product after a delay (for demonstration purposes)
+
     LaunchedEffect(currentProductIndex) {
-        delay(3000) // 3 seconds delay between products
+        delay(3000)
         currentProductIndex = (currentProductIndex + 1) % products.size
     }
 
@@ -161,7 +177,7 @@ fun ProductShowcase(navController: NavController, products: List<Product>) {
                 product = product,
                 totalProducts = products.size,
                 currentIndex = currentProductIndex,
-                onDotClicked = { index -> currentProductIndex = index } // Handle dot click
+                onDotClicked = { index -> currentProductIndex = index }
             )
         }
     }
